@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        ul {
+            list-style-type: none;
+            display: flex;
+            width: 100%; 
+            height: 50px;
+        }
+
+        ul li {
+            background-color: greenyellow;
+            border: 1px solid black;
+            text-align: center;
+            flex: 1;
+            line-height: 50px;
+            cursor: pointer;
+        }
+
+        #one {
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: aqua;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+
+        @media (max-width: 600px) {
+            ul li {
+                font-size: 14px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 4px;
+            }
+        }
+
+        .input-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            margin: 0 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="mymenu"></ul>
+
+    <input type="button" id="one" value="addmenu" class="styled-button" onclick="additem()">
+
+    <div class="input-container">
+        <input type="text" id="nameInput" placeholder="Name">
+        <input type="text" id="positionInput" placeholder="Position">
+        <input type="text" id="salaryInput" placeholder="Salary">
+        <button onclick="addEmployee()">Add Employee Data</button>
+    </div>
+
+    <table id="employeeTable">
+        <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <script>
+        var menu = ["Home", "About", "Contactus"];
+
+        function updatemenu() {
+            var newmenu = menu.map((d, index) => {
+                return `<li>${d} <button class="delete-button" onclick="removeItem(${index})">Remove</button></li>`;
+            });
+            document.getElementById('mymenu').innerHTML = newmenu.join("");
+        }
+        updatemenu();
+
+        function additem() {
+            var newItem = prompt("Enter new menu name");
+            if (newItem) {
+                menu.unshift(newItem);
+                updatemenu();
+            }
+        }
+
+        function removeItem(index) {
+            menu.splice(index, 1);
+            updatemenu();
+        }
+
+        var employeeData = [
+            { id: 1, name: "Harry", position: "Web Developer", salary: "₹60,000" },
+            { id: 2, name: "Sam", position: "Software engineer", salary: "₹70,000" },
+            { id: 3, name: "John", position: "software Developer", salary: "₹80,000" },
+            { id: 4, name: "Dev", position: "backend Developer", salary: "₹90,000" }
+        ];
+
+        var employeeTable = document.getElementById("employeeTable");
+
+        function displayEmployeeData() {
+            employeeTable.innerHTML = "";
+
+            employeeData.forEach((employee, index) => {
+                var row = employeeTable.insertRow();
+
+                row.insertCell().textContent = index + 1;
+                row.insertCell().textContent = employee.name;
+                row.insertCell().textContent = employee.position;
+                row.insertCell().textContent = employee.salary;
+
+                var deleteButtonCell = row.insertCell();
+                var deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-button";
+                deleteButton.addEventListener("click", function () {
+                    deleteEmployee(index);
+                });
+                deleteButtonCell.appendChild(deleteButton);
+            });
+        }
+
+        function deleteEmployee(index) {
+            employeeData.splice(index, 1);
+            displayEmployeeData();
+        }
+
+        function addEmployee() {
+            var name = document.getElementById("nameInput").value;
+            var position = document.getElementById("positionInput").value;
+            var salary = document.getElementById("salaryInput").value;
+
+            if (name && position && salary) {
+                var newEmployee = {
+                    id: employeeData.length + 1,
+                    name: name,
+                    position: position,
+                    salary: salary
+                };
+
+                employeeData.push(newEmployee);
+                displayEmployeeData();
+                resetInputFields();
+            }
+        }
+
+        function resetInputFields() {
+            document.getElementById("nameInput").value = "";
+            document.getElementById("positionInput").value = "";
+            document.getElementById("salaryInput").value = "";
+        }
+
+        displayEmployeeData();
+    </script>
+</body>
+
+</html>
